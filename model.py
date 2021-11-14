@@ -1,12 +1,3 @@
-"""
-Code Reference:
-
-PyTorch Geometric Team
-Graph Classification Colab Notebook (PyTorch Geometric)
-https://colab.research.google.com/drive/1I8a0DfQ3fI7Njc62__mVXUlcAleUclnb?usp=sharing 
-
-"""
-
 import torch
 from torch.nn import Linear
 import torch.nn.functional as F
