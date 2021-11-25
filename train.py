@@ -61,8 +61,8 @@ model = HGCN_pyg(c=1, hidden_channels=64, channel_in=matrix_dim, channel_out=gro
 print("Model:\n\t", model)
 optimizer = torch.optim.Adam(model.parameters()
                              , lr=0.001
-                             # , weight_decay=5e-4
-                             , weight_decay=0.001
+                             , weight_decay=5e-4
+                             # , weight_decay=0.001
                              )
 # optimizer = torch.optim.SGD(model.parameters()
 #                             , lr=0.001
