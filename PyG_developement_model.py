@@ -7,32 +7,6 @@ from torch_geometric.nn import global_mean_pool
 # import manifolds
 # from layers.hyp_layers import HyperbolicGraphConvolution, HypLinear, HypAgg, HypAct
 # from models.encoders import HGCN
-#
-# #######################hyperbolic graph coonvolutional neural network###########################
-# class HGCN(torch.nn.Module):
-#     def __init__(self, c, args):
-#         super(HGCN, self).__init__(c)
-#         self.manifold = getattr(manifolds, args.manifold)()
-#         assert args.num_layers > 1
-#         dims = 128
-#         acts = 'relu'
-#         self.curvatures = 1
-#         #        self.curvatures.append(self.c)
-#         hgc_layers = []
-#         for i in range(2):
-#             c_in, c_out = self.curvatures, self.curvatures
-#             in_dim, out_dim = dims[i], dims[i + 1]
-#             act = acts[i]
-#             hgc_layers.append(
-#                 hyp_layers.HyperbolicGraphConvolution(
-#                     self.manifold, in_dim, out_dim, c_in, c_out, args.dropout, act, args.bias, args.use_att,
-#                     args.local_agg
-#                 )
-#             )
-#         self.layers = torch.nn.Sequential(*hgc_layers)
-#         self.encode_graph = True
-
-#######################hyperbolic graph coonvolutional neural network###########################
 
 class MLP(torch.nn.Module):
     def __init__(self, hidden_channels):
@@ -128,4 +102,27 @@ class Graphsage(torch.nn.Module):
 
         return x
 
+class HGCN(torch.nn.Module):
+    def __init__(self, hidden_channels, indim, outdim):
+        super(HGCN, self).__init__()
+        torch.manual_seed(12345)
+        self.conv1 = GCNConv(indim, 84)
+        self.conv2 = GCNConv(84, hidden_channels)
+        self.conv3 = GCNConv(hidden_channels, 32)
+        self.lin1 = Linear(32,outdim)
+        self.dropout = torch.nn.Dropout(p=0.2)
 
+    def forward(self, x, edge_index, batch):
+        x = self.conv1(x, edge_index)
+        x = F.relu(x)
+        x = self.conv2(x, edge_index)
+        x = F.relu(x)
+        x = self.conv3(x, edge_index)
+        x = F.relu(x)
+
+        x = global_mean_pool(x, batch)
+
+        x = F.dropout(x, p=0.3, training=self.training)
+        x = self.lin1(x)
+
+        return x
