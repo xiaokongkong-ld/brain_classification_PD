@@ -18,7 +18,7 @@ def load_data(matrix_types, load_path, group, datatype):
     """ read .npz data from disk """
     data_path = os.path.join(load_path, matrix_types)
     if matrix_types=='SC':
-        load_name = '/' + group + '_' + datatype + '_164.npz'
+        load_name = '/' + group + '_' + datatype + '.npz'
     else:
         load_name = '/' + group + '_' + datatype+ '.npz'
     data_path = data_path + load_name
@@ -62,14 +62,18 @@ def matrix_filter_topK(matrix, K):
     m_l = len(matrix[0])
     index = [x for x in range(m_l)]
     f_mat = np.zeros(m_l)
+    mat=matrix.copy()
+    np.fill_diagonal(mat, -10)
 
-    for x in matrix:
+    for x in mat:
         y = heapq.nlargest(K, range(len(x)), x.take)
         y_else = np.setdiff1d(index, y)
         x[y] = 1
         x[y_else] = 0
         f_mat = np.vstack((f_mat, x))
     f_mat = np.delete(f_mat, np.s_[0], axis=0)
+    # print('=====================================================================================')
+    # print(f_mat)
     return f_mat
 
 

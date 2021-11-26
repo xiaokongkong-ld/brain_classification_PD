@@ -1,7 +1,7 @@
 import torch
 from torch_geometric.loader import DataLoader
 # from model import GCN
-from data_process_PD import train_test_split, create_dataset, get_data, show_dataset
+# from data_process_PD import train_test_split, create_dataset, get_data, show_dataset
 from data_process_ABIDE import train_test_split, create_dataset, get_data, show_dataset
 from model_new import HGCN_pyg,GCN,GAT,GraphSage
 import torch
@@ -22,19 +22,19 @@ groups = ['autism', 'control']
 
 print("\n---------Starting to load Data---------\n")
 
-## PD dataset
+# ## PD dataset
 # subs_data_fc = get_data(matrix_type[0], groups)
 # subs_data_sc = get_data(matrix_type[1], groups)
 # matrix_dim = len(subs_data_sc[0][0])
 # print(matrix_dim)
-# dataset = create_dataset(subs_data_sc, subs_data_sc, 20)
+# dataset = create_dataset(subs_data_fc, subs_data_fc, 10)
 #
 # train_list, test_list = train_test_split(dataset, 0.70)
 # show_dataset(dataset, 'original')
 # show_dataset(train_list, 'train')
 # show_dataset(test_list, 'test')
 
-## ABIDE dataset
+# ABIDE dataset
 subs_data_fc = get_data(groups)
 
 matrix_dim = len(subs_data_fc[0][0])
@@ -61,8 +61,8 @@ model = HGCN_pyg(c=1, hidden_channels=64, channel_in=matrix_dim, channel_out=gro
 print("Model:\n\t", model)
 optimizer = torch.optim.Adam(model.parameters()
                              , lr=0.001
-                             , weight_decay=5e-4
-                             # , weight_decay=0.001
+                             # , weight_decay=5e-4
+                             , weight_decay=0.001
                              )
 # optimizer = torch.optim.SGD(model.parameters()
 #                             , lr=0.001
